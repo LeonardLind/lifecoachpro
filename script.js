@@ -33,6 +33,20 @@ ScrollTrigger.refresh();
 
 loco()
 
+
+gsap.to(".gif-container",{
+  scrollTrigger:{
+      trigger:`#page>video`,
+      start:`2% top`,
+      end:`bottom top`,
+      scroller:`#main`
+  },
+  onStart:()=>{
+    gsap.set(".gif-container", { opacity: 0 });
+  }
+})
+
+
 gsap.to("#page>video",{
     scrollTrigger:{
         trigger:`#page>video`,
@@ -46,6 +60,7 @@ gsap.to("#page>video",{
 })
 
 
+
 gsap.to("#page",{
     scrollTrigger:{
         trigger:`#page`,
@@ -57,25 +72,30 @@ gsap.to("#page",{
     }
 })
 
-gsap.to("#page-bottom",{
-    scrollTrigger:{
-        trigger:`#page-bottom`,
-        start:`5% top`,
-        end:`bottom top`,
-        scroller:`#main`,
-        scrub:.5,
-    },
-    opacity:0
-})
+ScrollTrigger.create({
+  trigger: "#page-bottom",
+  start: "top top",
+  end: "bottom top",
+  scroller: "#main",
+  onUpdate: (self) => {
+      const progress = self.progress; // Get the scroll progress
+
+      // Calculate the opacity based on scroll progress
+      const opacity = 1 - progress;
+
+      gsap.set("#page-bottom", { opacity: opacity }); // Set the opacity
+  }
+});
+
 
 var tl = gsap.timeline({
-    scrollTrigger:{
-        trigger:`#page1`,
-        start:`top top`,
-        scrub:1,
-        scroller:`#main`,
-        pin:true
-    }
+  scrollTrigger:{
+      trigger:`#page1`,
+      start:`top top`,
+      scrub:1,
+      scroller:`#main`,
+      pin:true
+  }
 })
 
 
@@ -405,10 +425,6 @@ canvas();
 
 
 
-
-
-
-
 $(document).ready(function() {
   /*
    * Main variables
@@ -558,12 +574,6 @@ $(document).ready(function() {
 });
 
 
-
-
-
-
-
-
 var tl4 = gsap.timeline({
   scrollTrigger:{
       trigger:`#page22`,
@@ -578,17 +588,3 @@ var tl4 = gsap.timeline({
 tl4.to("#page22>#snroff",{
   opacity:0
 })
-
-function toggleButtonVisibility(buttonClass) {
-  var buttons = document.getElementsByClassName(buttonClass);
-  for (var i = 0; i < buttons.length; i++) {
-      if (buttons[i].style.visibility === "hidden") {
-          buttons[i].style.visibility = "visible";
-      } else {
-          buttons[i].style.visibility = "hidden";
-      }
-  }
-}
-
-// Call the function with the class name of the buttons
-toggleButtonVisibility("invisible-button");
