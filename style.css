@@ -990,14 +990,16 @@ body {
         font-size: 4vw;
         width: 75%;
         top: 0%;
+        height: 30vh;
     }
  
     #page16>img{
-        width: 50%;
-        bottom: 18%;
+        height: 30vh;
+        width: auto;
+        bottom: 12%;
     }
     #page16>button{
-        bottom: 8%;
+        bottom: 4%;
         padding: 10px 40px;
         font-size: 2.3vw;
     }
