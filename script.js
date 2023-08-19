@@ -1,4 +1,5 @@
-function loco(){
+if ( $(window).width() > 739) {
+  function loco(){
     gsap.registerPlugin(ScrollTrigger);
 
 // Using Locomotive Scroll from Locomotive https://github.com/locomotivemtl/locomotive-scroll
@@ -588,3 +589,173 @@ var tl4 = gsap.timeline({
 tl4.to("#page22>#snroff",{
   opacity:0
 })
+
+
+
+
+
+  }
+  else {
+    $(document).ready(function() {
+      /*
+       * Main variables
+       */
+      var content = [{
+        title: "LEONARD",
+        desc: "Reflecting on my coaching with Nicole, I'm deeply grateful. Her rapid rapport-building created a safe haven for vulnerability. She skillfully guided me toward self-discovery and offered exercises that illuminated my values. Nicole's attentive listening and silent understanding have been invaluable. Thank you, Nicole, for an enlightening journey!"
+      }, {
+        title: "DENISE",
+        desc: "Nicole is a great coach. I really liked how easy it was to schedule calls with her and to take care of the formalities so that the focus was on our sessions. She created an open and friendly atmosphere from the start. I always felt comfortable and understood, and the pace was great so that I could always integrate the new awareness into my day-to-day life. I can definitely recommend Nicole to anyone who has had negative experiences with being judged for health and/or weight issues in the past."
+      }, {
+        title: "KAMI",
+        desc: "Nicole, thank you for being a pivotal part of my self-discovery journey. Your coaching has illuminated my life and values. Your approachability allowed us to establish a strong connection easily. During our sessions, I felt at ease, sharing my thoughts, feelings, struggles, and vulnerabilities openly. Your guidance led me to recognize the areas needing attention and uplifting in my life. Through exercises, you revealed the power of self-forgiveness and kindness. Your attentive listening and ability to create silent spaces for reflection truly set you apart as a great coach. Thank you for making me feel valued and heard. It's been a joy working with you. Best wishes, Nicole"
+      }, {
+        title: "SOFIA",
+        desc: [
+          "Nicole's coaching is transformational. She handles logistics seamlessly, allowing us to focus on discussions. Her welcoming approach creates a safe space. With perfect pacing, she integrates insights effectively. For anyone seeking empathetic coaching, especially after past judgments, I highly recommend Nicole.".split("")
+        ]
+      }];
+    
+    
+      var currentPage = 0;
+      //generate content
+      for (var i = 0; i < content.length; i++) {
+        //split content letters to array
+        for (var obj in content[i]) {
+          //if string
+          if (typeof content[i][obj] === "string") {
+            content[i][obj] = content[i][obj].split("");
+            continue;
+          }
+          //if array (grouped text)
+          else if (typeof content[i][obj] === "object") {
+            var toPush = [];
+            for(var j = 0; j < content[i][obj].length; j++) {
+              for(var k = 0; k < content[i][obj][j].length; k++) {
+                toPush.push(content[i][obj][j][k]);
+              }
+            }
+            content[i][obj] = toPush;
+          }
+        }
+        //set text to 
+        $("#segments").append("<div class=\"letters-wrap mutable\"><div class=\"soup-title\"></div><div class=\"soup-desc\"></div></div>");
+        setText();
+        //clone to data
+        $("#segments").append("<div class=\"letters-wrap position-data\"><div class=\"soup-title\"></div><div class=\"soup-desc\"></div></div>");
+        setText();
+      }
+      //initial arrangement
+      arrangeCurrentPage();
+      scrambleOthers();
+      /*
+       * Event handlers
+       */
+      $(window).resize(function() {
+        arrangeCurrentPage();
+        scrambleOthers();
+      });
+      $("#soup-prev").hide();
+      $("#soup-prev").click(function() {
+        $("#soup-next").show();
+        currentPage--;
+        if (currentPage === 0) {
+          $("#soup-prev").hide();
+        }
+        arrangeCurrentPage();
+        scrambleOthers();
+      });
+      $("#soup-next").click(function() {
+        $("#soup-prev").show();
+        currentPage++;
+        if (currentPage === content.length - 1) {
+          $("#soup-next").hide();
+        }
+        arrangeCurrentPage();
+        scrambleOthers();
+      });
+      /*
+       * Functions
+       */
+      function arrangeCurrentPage() {
+        for (var i = 0; i < content[currentPage].title.length; i++) {
+          $(".mutable:eq(" + currentPage + ") > .soup-title > .letter").eq(i).css({
+            left: $(".position-data:eq(" + currentPage + ") > .soup-title > .letter").eq(i).offset().left + "px",
+            top: $(".position-data:eq(" + currentPage + ") > .soup-title > .letter").eq(i).offset().top + "px",
+            color: "#fff",
+            zIndex: 9001
+          });
+        }
+        for (var i = 0; i < content[currentPage].desc.length; i++) {
+          $(".mutable:eq(" + currentPage + ") > .soup-desc > .letter").eq(i).css({
+            left: $(".position-data:eq(" + currentPage + ") > .soup-desc > .letter").eq(i).offset().left + "px",
+            top: $(".position-data:eq(" + currentPage + ") > .soup-desc > .letter").eq(i).offset().top + "px",
+            color: "#fff",
+            zIndex: 9001
+          });
+        }
+      }
+    
+      function setText() {
+        var j;
+        for (j = 0; j < content[i].title.length; j++) {
+          $(".soup-title").last().append("<span class=\"letter\">" + content[i].title[j] + "</span>");
+        }
+        for (j = 0; j < content[i].desc.length; j++) {
+          $(".soup-desc").last().append("<span class=\"letter\">" + content[i].desc[j] + "</span>");
+        }
+      }
+    
+      function scrambleOthers() {
+        for (var i = 0; i < content.length; i++) {
+          //don't scramble currentPage
+          if (currentPage === i)
+            continue;
+          var parts = [
+            ["title", ".soup-title"],
+            ["desc", ".soup-desc"]
+          ];
+          //apply to .title h1s and .desc ps
+          for (var j = 0; j < parts.length; j++) {
+            for (var k = 0; k < content[i][parts[j][0]].length; k++) {
+              //define random position on screen
+              var randLeft = Math.floor(Math.random() * $(window).width());
+              var randTop = Math.floor(Math.random() * $(window).height());
+              //defining boundaries
+              var offset = $(".position-data").eq(currentPage).offset();
+              var bounds = {
+                left: offset.left,
+                top: offset.top,
+                right: $(window).width() - offset.left,
+                bottom: $(window).height() - offset.top
+              };
+              var middleX = bounds.left + $(".position-data").eq(currentPage).width() / 2;
+              var middleY = bounds.top + $(".position-data").eq(currentPage).height() / 2;
+              //finally, apply all the scrambles
+              $(".mutable:eq(" + i + ") > " + parts[j][1] + " > .letter").eq(k).css({
+                left: randLeft,
+                top: randTop,
+                color: "#ffffff33",
+                zIndex: "initial"
+              });
+            }
+          }
+        }
+      }
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
