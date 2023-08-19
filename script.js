@@ -596,6 +596,26 @@ tl4.to("#page22>#snroff",{
 
   }
   else {
+
+    const video = document.getElementById('page1').querySelector('video');
+
+    function checkViewport() {
+      if (window.innerWidth < 480) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    }
+    
+    // Check viewport on page load
+    checkViewport();
+    
+    // Check viewport on window resize
+    window.addEventListener('resize', checkViewport);
+
+
+
+
     $(document).ready(function() {
       /*
        * Main variables
