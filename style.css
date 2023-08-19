@@ -836,6 +836,7 @@ body {
     #page3-upper>img{
         width: 20%;
         top: -12%;
+        visibility: hidden;
     }
 
     #page3-upper-inner{
